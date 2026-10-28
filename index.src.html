@@ -1,0 +1,67 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#101012">
+  <meta name="color-scheme" content="dark">
+  <meta name="description" content="ClausePilot : lecture guidée de clauses contractuelles, avec sources, ambiguïtés et validation humaine.">
+  <title>ClausePilot — Revue contractuelle</title>
+  <!-- STYLES -->
+</head>
+<body>
+<a class="skip-link" href="#workspace">Aller à l'analyse</a>
+<header class="site-nav" id="top">
+ <div class="nav-inner">
+  <a class="brand" href="#top" aria-label="ClausePilot, accueil"><span class="brand-icon" aria-hidden="true"><svg viewBox="0 0 26 26" width="23" height="23" fill="none"><rect x="2.5" y="4" width="15" height="15" rx="2.5" fill="currentColor"/><rect x="10" y="11" width="13.5" height="13.5" rx="2.5" stroke="#F1F1F2" stroke-width="2"/></svg></span><span>clausepilot<span class="brand-dot">.</span></span></a>
+  <nav class="nav-links" aria-label="Navigation principale"><a href="#workspace" aria-current="page">Démonstration</a><a href="#approach">Méthode</a><a href="https://github.com/sofianebelaribi/clausepilot-foyer-demo" target="_blank" rel="noopener noreferrer">Code source ↗</a></nav>
+  <span class="nav-edition"><span class="nav-live" aria-hidden="true"></span> Démo indépendante · 2026</span>
+ </div>
+</header>
+<main>
+ <section class="intro" aria-labelledby="page-title">
+  <div class="section-label"><span class="section-accent" aria-hidden="true">✦</span> EXERCICE AI ENGINEERING · GROUPE FOYER</div>
+  <h1 id="page-title">Analyse de sinistre<span class="punctuation">.</span></h1>
+  <p>Une lecture traçable des conditions générales. Pas de décision sans faits suffisants, ni sans clauses vérifiables.</p>
+ </section>
+ <div id="workspace" class="workspace" tabindex="-1">
+  <div class="workspace-toolbar"><div class="workspace-brand"><span class="workspace-symbol" aria-hidden="true">✦</span><span>Revue contractuelle</span><span class="toolbar-sep" aria-hidden="true">/</span><span class="toolbar-subtitle">Dossier fictif</span></div><div class="toolbar-right"><span class="local-state"><span class="local-dot" aria-hidden="true"></span> Traitement local</span><span class="toolbar-reference">HOME / LU / 09.2024</span></div></div>
+  <div class="scenario-bar"><span class="bar-label">Choisir un cas</span><nav id="scenarioButtons" class="examples" aria-label="Scénarios de sinistre"></nav></div>
+  <div class="workbench">
+   <div class="case-content">
+    <section class="prompt" aria-labelledby="prompt-title">
+     <div class="section-heading"><div><span class="panel-index">01 <span aria-hidden="true">/</span> Déclaration</span><h2 id="prompt-title">Les faits du dossier</h2></div><span class="info-tag">Données fictives</span></div>
+     <form id="caseForm" novalidate>
+      <div class="composer"><label for="description" class="composer-label">Que s'est-il passé ?</label><textarea id="description" name="description" rows="4" maxlength="3000" placeholder="Décrivez le bien, le lieu et les circonstances…" required aria-describedby="descriptionHelp descriptionError"></textarea><div id="descriptionError" class="form-error" role="alert"></div><div class="composer-actions"><span id="descriptionHelp" class="composer-help">Aucune donnée transmise à un serveur.</span><div class="composer-right"><button id="resetButton" type="button" class="quiet-button">Réinitialiser</button><button type="submit" class="primary-button">Actualiser l'analyse <span aria-hidden="true">↗</span></button></div></div></div>
+      <details id="refinements" class="refinements"><summary><span class="summary-title">Garanties et circonstances</span><span class="summary-hint">Renseigner les inconnues <span class="chevron" aria-hidden="true">⌄</span></span></summary><div class="refinements-inner"><p>Les réponses sont déclaratives. Un « Oui » ne prouve pas qu'une garantie figure réellement au contrat.</p><div id="caseFields" class="fields"></div></div></details>
+     </form>
+    </section>
+    <section class="reading" aria-labelledby="reading-title">
+     <div class="section-heading analysis-heading"><div><span class="panel-index">02 <span aria-hidden="true">/</span> Orientation</span><h2 id="reading-title">Résultat de la lecture</h2><p id="readingSub">Moteur à règles explicites · Validation humaine requise</p></div><span id="runState" class="run-status">À jour</span></div>
+     <div id="staleBanner" class="stale" hidden>Les faits ont changé. Actualisez l'analyse pour consulter un résultat à jour.</div>
+     <div class="answer" id="answer" aria-live="polite" aria-atomic="false">
+      <div class="answer-heading"><span class="answer-kicker">Orientation provisoire</span><span id="ruleIdentifier" class="rule-identifier"></span></div>
+      <div class="answer-main"><div class="answer-status"><span class="status-dot" aria-hidden="true"></span><span id="answerStatus">À approfondir</span></div><h3 id="answerTitle"></h3><p id="answerSummary"></p><div id="citationChips" class="citations" aria-label="Citations de l'analyse"></div></div>
+      <div class="answer-details"><section aria-labelledby="facts-title"><div class="detail-heading"><h4 id="facts-title">Éléments relevés</h4><span id="factsCount">0</span></div><ul id="factsList" class="facts-list"></ul></section><section aria-labelledby="gaps-title"><div class="detail-heading"><h4 id="gaps-title">Informations manquantes</h4><span id="questionsCount">0</span></div><ul id="questionsList" class="questions-list"></ul></section></div>
+      <div class="caution"><span aria-hidden="true">ⓘ</span><p>Le contrat individuel et ses éventuels avenants ne sont pas fournis. <strong>Ce résultat ne constitue pas une décision d'indemnisation.</strong></p></div>
+      <div class="answer-actions"><div class="action-buttons"><button id="copyButton" type="button" class="action-button">Copier le résumé</button><button id="exportButton" type="button" class="action-button">Exporter le dossier</button><button id="replayButton" type="button" class="action-button">Relancer ↻</button></div><span id="actionNotice" class="action-notice" role="status" aria-live="polite"></span></div>
+     </div>
+     <section class="followups" aria-labelledby="followups-title"><div class="followups-label"><h3 id="followups-title">Tester une autre hypothèse</h3><span>Modifie les faits déclarés, pas le contrat</span></div><div id="followupActions" class="followup-actions"></div></section>
+    </section>
+   </div>
+   <aside class="evidence-panel" id="sources" aria-labelledby="sources-title">
+    <div class="evidence-heading"><span class="panel-index">03 <span aria-hidden="true">/</span> Preuves</span><h2 id="sources-title">Clauses à vérifier</h2><p>Références issues de conditions générales publiques, et non d'un contrat individuel.</p></div>
+    <div class="sources-top"><span id="sourcesCount">Sources consultables</span><a id="contractUrl" href="https://www.baloise.lu/" target="_blank" rel="noopener noreferrer">PDF original ↗</a></div>
+    <div class="sources-viewport"><div id="evidenceList" class="sources" aria-label="Références du contrat"></div></div>
+    <div class="evidence-bottom"><span class="evidence-bottom-title">Limite du corpus</span><p>Neuf références paraphrasées, indexées manuellement. Ouvrez le PDF source pour confirmer chaque formulation et son contexte.</p></div>
+   </aside>
+  </div>
+  <div class="workspace-footer"><span>ClausePilot / prototype déterministe sans IA générative</span><span>4 cas de test · 1 contrat public · pas de données client</span></div>
+ </div>
+ <section id="approach" class="approach" aria-labelledby="approach-title"><div><span class="approach-eyebrow">Méthode et limites</span><h2 id="approach-title">Un système explicable, sans prétendre tout savoir.</h2></div><div class="approach-content"><p>L'interface fonctionne avec des règles explicites et une sélection de clauses manuellement identifiées. Un <strong>pipeline Python distinct</strong> démontre l'indexation de PDF et la recherche BM25 limitée au bon contrat. Ces deux parties ne sont pas encore raccordées.</p><p>Pour passer à plusieurs centaines de contrats : gestion stricte des versions, segmentation documentaire, retrieval évalué, citations en contexte, tests d'abstention et revue humaine. Aucun score de confiance fictif.</p><a href="https://github.com/sofianebelaribi/clausepilot-foyer-demo/blob/main/docs/TECHNICAL_NOTE.md" target="_blank" rel="noopener noreferrer">Consulter l'architecture et les tests ↗</a></div></section>
+</main>
+<footer class="site-footer"><span>ClausePilot © 2026 · Démonstration indépendante</span><span>Ni affilié à Foyer, ni à Baloise · <span id="contractName">Baloise HOME</span></span></footer>
+<div id="sourcePopover" class="source-popover" role="dialog" aria-modal="false" aria-label="Aperçu de la référence" hidden></div>
+<!-- APP -->
+</body>
+</html>

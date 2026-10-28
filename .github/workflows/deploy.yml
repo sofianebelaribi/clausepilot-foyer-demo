@@ -1,0 +1,55 @@
+name: Deploy ClausePilot Worker
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+permissions:
+  contents: read
+concurrency:
+  group: clausepilot-production
+  cancel-in-progress: false
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    if: ${{ github.repository == 'sofianebelaribi/clausepilot-foyer-demo' }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - run: python -m pip install pymupdf
+      - name: Test deterministic decision and PDF index
+        run: |
+          npm test
+          python -m unittest discover -s tests -p test_contract_index.py -v
+      - name: Build reproducible standalone page and Worker
+        run: |
+          npm run build
+          git diff --exit-code -- index.html
+          cat dist/release.json
+      - name: Deploy only with configured credentials
+        env:
+          CF_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          CF_ACCOUNT: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+        run: |
+          if [[ -z "$CF_TOKEN" || -z "$CF_ACCOUNT" ]]; then
+            echo "Deployment not configured: set CLOUDFLARE_API_TOKEN and CLOUDFLARE_ACCOUNT_ID secrets."
+            exit 0
+          fi
+          export CLOUDFLARE_API_TOKEN="$CF_TOKEN" CLOUDFLARE_ACCOUNT_ID="$CF_ACCOUNT"
+          npm exec --yes --package=wrangler@4 -- wrangler deploy --config wrangler.toml
+          python - <<'PY'
+          import json,urllib.request,os
+          base='https://clausepilot-foyer-demo.sofiane5434.workers.dev'
+          got=json.load(urllib.request.urlopen(base+'/__version',timeout=20))
+          expected=json.load(open('dist/release.json'))
+          assert got==expected, (got,expected)
+          resp=urllib.request.urlopen(base+'/',timeout=20)
+          assert resp.status==200
+          print('Verified published artifact SHA of live Worker')
+          PY
+        # Requires repository secrets; without them CI builds/tests but no deployment.

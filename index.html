@@ -1,0 +1,304 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#101012">
+  <meta name="color-scheme" content="dark">
+  <meta name="description" content="ClausePilot : lecture guidée de clauses contractuelles, avec sources, ambiguïtés et validation humaine.">
+  <title>ClausePilot — Revue contractuelle</title>
+  <style>
+/* ClausePilot workbench — task-first dark design; Affect UI as a visual reference, no copied components. */
+:root{color-scheme:dark;--bg:#101012;--frame:#151517;--panel:#1c1c1f;--raised:#242428;--ink:#f2f2f4;--muted:#a0a0a7;--soft:#77777f;--line:#303034;--hover:#2a2a2e;--focus:#85b7ff;--accent:#e26eb4;--accent-faint:#341d2b;--positive:#8bdeb5;--warning:#f5cb83;--negative:#f4979a;font-family:Inter,ui-sans-serif,system-ui,-apple-system,'Segoe UI',sans-serif;font-size:14px;line-height:1.55;-webkit-font-smoothing:antialiased;background:var(--bg);color:var(--ink)}
+*{box-sizing:border-box}html{scroll-behavior:smooth}body{margin:0;min-width:280px}button,textarea,select{font:inherit}button{cursor:pointer}button:disabled{cursor:not-allowed;opacity:.45}a{color:inherit}a:focus-visible,button:focus-visible,summary:focus-visible,textarea:focus-visible,select:focus-visible{outline:2px solid var(--focus);outline-offset:3px}[hidden]{display:none!important}.skip-link{position:absolute;left:16px;top:-100px;background:#fff;color:#111;padding:12px;z-index:100}.skip-link:focus{top:12px}
+.site-nav{border-bottom:1px solid #26262a;background:#111113}.nav-inner{max-width:1240px;margin:auto;min-height:66px;padding:0 30px;display:flex;align-items:center;gap:42px}.brand{text-decoration:none;font-size:17px;font-weight:600;letter-spacing:-.65px;display:flex;align-items:center;gap:9px;white-space:nowrap}.brand-icon{display:flex;color:#f1f1f3}.brand-dot{color:var(--accent)}.nav-links{display:flex;gap:30px;align-items:center}.nav-links a{font-size:13px;text-decoration:none;color:#b2b2bb;white-space:nowrap}.nav-links a:hover,.nav-links [aria-current=page]{color:#f2f2f5}.nav-edition{margin-left:auto;font-size:12px;color:#85858d;white-space:nowrap}.nav-live{display:inline-block;width:6px;height:6px;background:#a4c7a7;border-radius:50%;vertical-align:2px;margin-right:6px}
+.intro{max-width:1240px;margin:0 auto;padding:73px 30px 41px}.section-label{color:#9898a2;font-size:11px;font-weight:500;letter-spacing:.06em;display:flex;align-items:center;gap:8px}.section-accent{color:var(--accent);font-size:15px}.intro h1{font-size:clamp(31px,3.4vw,43px);letter-spacing:-1.6px;font-weight:500;line-height:1.15;margin:16px 0 12px}.punctuation{color:var(--accent)}.intro p{color:#a8a8b0;max-width:710px;font-size:15px;margin:0;line-height:1.65}
+.workspace{max-width:1180px;margin:0 auto 100px;border:1px solid #35353a;border-radius:13px;overflow:hidden;background:var(--frame)}.workspace-toolbar{min-height:57px;padding:0 23px;display:flex;align-items:center;justify-content:space-between;gap:16px;border-bottom:1px solid var(--line);background:#1c1c1e}.workspace-brand,.toolbar-right{display:flex;align-items:center;gap:10px;font-size:12px;font-weight:500}.workspace-symbol{color:#86b1ff}.toolbar-sep{color:#5b5b63}.toolbar-subtitle,.toolbar-reference{color:#95959e;font-weight:400}.toolbar-right{gap:20px}.local-state{color:#aeb2b0;font-size:11px;font-weight:400}.local-dot{display:inline-block;width:6px;height:6px;border-radius:50%;background:#7aa38b;margin-right:4px}.toolbar-reference{font-family:ui-monospace,SFMono-Regular,Consolas,monospace;font-size:10px}
+.scenario-bar{padding:17px 23px;display:flex;gap:20px;align-items:center;border-bottom:1px solid var(--line)}.bar-label{font-size:12px;color:#a6a6ae;flex-shrink:0}.examples{display:flex;align-items:center;gap:8px;flex-wrap:wrap}.scenario{min-height:35px;border:1px solid #3b3b40;border-radius:999px;color:#b9b9bf;background:#242427;padding:6px 13px;font-size:12px;display:inline-flex;gap:8px;align-items:center;transition:background .13s,border-color .13s,color .13s}.scenario-dot{width:5px;height:5px;border-radius:50%;background:#777781}.scenario:hover{background:#303035;color:white}.scenario[aria-pressed=true]{border-color:#65656d;background:#34343a;color:#fff}.scenario[aria-pressed=true] .scenario-dot{background:var(--accent)}
+.workbench{display:grid;grid-template-columns:minmax(0,1fr) 345px;align-items:stretch;min-width:0}.case-content{min-width:0}.prompt,.reading{padding:28px 31px}.prompt{border-bottom:1px solid var(--line)}.section-heading{display:flex;align-items:start;justify-content:space-between;gap:16px;margin-bottom:20px}.panel-index{font-size:11px;color:#a7a7b1;font-weight:500}.panel-index>span{color:#63636c;padding:0 4px}.section-heading h2,.evidence-heading h2{font-size:18px;line-height:1.3;font-weight:500;letter-spacing:-.4px;margin:7px 0 0}.info-tag{font-size:10px;color:#a3a3a9;background:#25252a;border:1px solid #3a3a3e;border-radius:999px;padding:4px 10px;white-space:nowrap}.composer-label{display:block;color:#c3c3ca;font-size:12px;margin:0 0 9px}.composer textarea{background:#161618;width:100%;min-height:113px;resize:vertical;border-radius:8px;color:var(--ink);border:1px solid #414147;padding:14px 15px;font-size:13px;line-height:1.65}.composer textarea::placeholder{color:#85858f}.composer textarea:hover,.field select:hover{border-color:#696971}.form-error{font-size:12px;color:var(--negative);margin:5px 0}.composer-actions{display:flex;justify-content:space-between;align-items:center;gap:15px;margin:11px 0 0;flex-wrap:wrap}.composer-help{font-size:11px;color:#888892}.composer-right{display:flex;gap:9px;align-items:center}.quiet-button,.primary-button,.action-button,.followup{border-radius:999px;min-height:38px;transition:background .13s,border-color .13s,color .13s}.quiet-button{color:#bdbdc5;background:transparent;border:0;padding:0 12px;font-size:12px}.quiet-button:hover{background:#2b2b30}.primary-button{color:#17171a;background:#ededf0;border:1px solid #ececf0;font-size:12px;font-weight:600;padding:0 16px}.primary-button:hover{background:#fff}.primary-button span{margin-left:8px}.refinements{margin-top:20px;border-top:1px solid #333338}.refinements summary{padding:16px 0;display:flex;align-items:center;justify-content:space-between;gap:12px;cursor:pointer;list-style:none;font-size:12px}.refinements summary::-webkit-details-marker{display:none}.summary-title{font-weight:500;color:#c8c8d0}.summary-hint{color:#96969f;font-size:11px}.chevron{padding-left:6px}.refinements[open] .chevron{display:inline-block;transform:rotate(180deg)}.refinements-inner{padding:2px 0 10px}.refinements-inner p{font-size:11px;color:#a3a3ad;line-height:1.6;margin:0 0 17px}.fields{display:grid;grid-template-columns:1fr 1fr;gap:14px}.field{display:flex;flex-direction:column;gap:7px;font-size:12px;color:#cacad0}.field select{min-height:40px;background:#1c1c20;color:#f1f1f2;border:1px solid #48484e;border-radius:7px;padding:8px;min-width:0}.form-empty{font-size:12px;color:#a8a8b1}
+.analysis-heading{margin-bottom:15px}.analysis-heading p{font-size:11px;color:#8d8d99;margin:6px 0 0}.run-status{font-size:11px;color:var(--positive);border:1px solid #315545;border-radius:999px;background:#1b3028;padding:4px 9px;white-space:nowrap}.run-status.is-stale{color:var(--warning);border-color:#594c30;background:#352b1c}.stale{background:#352b1d;color:#f5d69e;border:1px solid #735a31;padding:12px 14px;border-radius:7px;font-size:12px;margin-bottom:14px}.answer{background:transparent}.answer-heading{display:flex;justify-content:space-between;gap:15px;align-items:center}.answer-kicker{font-size:12px;font-weight:500;color:#bdbdc7}.rule-identifier{font:10px/1.5 ui-monospace,SFMono-Regular,Consolas,monospace;color:#7e7e87;text-align:right}.answer-main{padding:18px 0 21px;border-bottom:1px solid var(--line)}.answer-status{font-size:12px;color:var(--warning);display:inline-flex;gap:8px;align-items:center;font-weight:500}.status-dot{height:7px;width:7px;border-radius:50%;background:currentColor}.answer-status.positive{color:var(--positive)}.answer-status.negative{color:var(--negative)}.answer-main h3{font-size:23px;font-weight:500;letter-spacing:-.7px;line-height:1.25;margin:10px 0}.answer-main p{font-size:13px;color:#c0c0c8;line-height:1.75;margin:0;max-width:650px}.citations{display:flex;flex-wrap:wrap;align-items:center;gap:7px;margin-top:16px}.cite-label{font-size:11px;color:#9c9ca5;margin-right:6px}.cite-chip{font:11px ui-monospace,SFMono-Regular,Consolas,monospace;color:#c4d6fa;background:#242b38;border:1px solid #3d506a;border-radius:6px;padding:6px 8px;min-height:29px}.cite-chip sup{color:#91b7f6;margin-right:5px}.cite-chip:hover,.cite-chip.is-highlighted{border-color:#7eaaff;background:#2a3851}.answer-details{display:grid;grid-template-columns:1fr 1fr;gap:28px;padding:22px 0 13px}.detail-heading{display:flex;align-items:center;justify-content:space-between;gap:10px;border-bottom:1px solid var(--line);padding-bottom:10px}.detail-heading h4{font-size:12px;font-weight:500;margin:0}.detail-heading span{font-family:ui-monospace,monospace;font-size:11px;color:#aaaab2}.facts-list,.questions-list{padding-left:17px;margin:12px 0;color:#afb0b9;display:grid;gap:8px;font-size:12px;line-height:1.6}.facts-list li::marker{color:var(--positive)}.questions-list li::marker{color:var(--warning)}.caution{display:flex;gap:10px;margin:13px 0;background:#222228;border:1px solid #3a3a42;border-radius:7px;padding:11px 13px;color:#c8c8d1}.caution>span{color:var(--warning);font-size:17px;line-height:1.2}.caution p{margin:0;font-size:11px;line-height:1.6}.caution strong{font-weight:500;color:#f2f2f4}.answer-actions{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;margin-top:17px}.action-buttons{display:flex;gap:7px;flex-wrap:wrap}.action-button{color:#c5c5cf;background:#232327;border:1px solid #45454b;padding:0 13px;font-size:11px;min-height:34px}.action-button:hover{background:#303036;border-color:#6b6b73}.action-notice{color:var(--positive);font-size:11px}.followups{border-top:1px solid var(--line);margin-top:25px;padding-top:20px}.followups-label{display:flex;align-items:baseline;justify-content:space-between;gap:12px;flex-wrap:wrap}.followups h3{font-size:12px;font-weight:500;margin:0}.followups-label span{color:#909099;font-size:11px}.followup-actions{display:flex;flex-wrap:wrap;gap:8px;margin-top:13px}.followup{border:1px solid #414147;background:#242428;padding:6px 12px;font-size:11px;color:#c7c7d0;min-height:35px}.followup:hover{background:#33333a;border-color:#686873}
+.evidence-panel{border-left:1px solid var(--line);background:#1b1b1e;min-width:0;display:flex;flex-direction:column}.evidence-heading{padding:28px 23px 16px}.evidence-heading h2{margin-top:8px}.evidence-heading p{font-size:12px;color:#a0a0aa;line-height:1.65;margin:10px 0 0}.sources-top{display:flex;align-items:center;justify-content:space-between;gap:8px;margin:0 23px;padding:12px 0;border-top:1px solid var(--line);border-bottom:1px solid var(--line);font-size:11px;color:#b5b5be}.sources-top a{text-decoration:none;color:#b9cffa;white-space:nowrap}.sources-top a:hover{text-decoration:underline}.sources-viewport{min-width:0;max-height:780px;overflow-y:auto;overscroll-behavior:contain}.sources{display:grid;padding:0 23px}.source-card{display:flex;flex-direction:column;gap:7px;padding:17px 0;border-bottom:1px solid #343439;text-decoration:none;transition:background .12s}.source-card:hover,.source-card.is-highlighted{background:#252529}.source-card-head,.source-card-footer{display:flex;align-items:center;justify-content:space-between;gap:12px}.source-card-number{font:11px ui-monospace,monospace;color:#9e9ea9}.source-card-origin{font-size:10px;color:#83838e}.source-card-title{font-size:12px;font-weight:500;color:#e8e8ec}.source-card-note{font-size:11px;color:#a4a4ad;line-height:1.6}.source-card-footer{font:10px ui-monospace,monospace;color:#8e8e99}.source-card-footer span{font-size:12px;color:#b1c7f5}.evidence-bottom{padding:20px 23px 28px}.evidence-bottom-title{font-size:11px;color:#c8c8d0;font-weight:500}.evidence-bottom p{font-size:11px;line-height:1.7;color:#9999a2;margin:7px 0 0}.workspace-footer{min-height:45px;padding:12px 23px;border-top:1px solid var(--line);color:#85858e;display:flex;align-items:center;justify-content:space-between;gap:10px;font-size:10px}
+.approach{max-width:1180px;margin:0 auto 78px;padding:31px 0 0;border-top:1px solid #2c2c31;display:grid;grid-template-columns:1fr 1.12fr;gap:65px}.approach-eyebrow{font-size:11px;color:#b4b4be}.approach h2{font-size:24px;line-height:1.3;font-weight:500;letter-spacing:-.6px;margin:12px 0 0;max-width:440px}.approach-content p{color:#a6a6b0;font-size:12px;line-height:1.8;margin:0 0 14px}.approach-content strong{font-weight:500;color:#e1e1e8}.approach-content a{color:#c5d5fc;text-decoration:underline;text-underline-offset:4px;font-size:12px}.site-footer{border-top:1px solid #27272c;max-width:1240px;margin:auto;padding:25px 30px 45px;display:flex;justify-content:space-between;gap:20px;color:#7f7f88;font-size:11px}
+.source-popover{position:fixed;z-index:30;max-width:min(340px,calc(100vw - 24px));background:#26262b;border:1px solid #585861;border-radius:10px;padding:18px;box-shadow:0 18px 45px #0009}.popover-head{display:flex;justify-content:space-between;align-items:center;gap:15px}.popover-origin{font:10px ui-monospace,monospace;color:#a7bff4}.popover-close{min-height:32px;min-width:32px;border:1px solid #45454d;color:#eee;background:#34343a;border-radius:50%;font-size:18px}.source-popover h4{font-size:15px;font-weight:500;margin:12px 0}.source-popover p{font-size:12px;line-height:1.65;color:#b9b9c3}.source-popover a{font-size:12px;color:#b5cfff}
+@media(max-width:1230px){.workspace,.approach{margin-left:22px;margin-right:22px}}@media(max-width:950px){.workbench{grid-template-columns:1fr}.evidence-panel{border-left:0;border-top:1px solid var(--line)}.sources-viewport{max-height:none}.sources{grid-template-columns:repeat(2,minmax(0,1fr));gap:0 18px}.evidence-heading{padding-bottom:16px}.scenario-bar{align-items:start;flex-wrap:wrap}.approach{gap:30px}}
+@media(max-width:680px){.nav-inner{min-height:58px;padding:0 16px;gap:15px}.brand{font-size:15px}.brand-icon svg{width:19px;height:19px}.nav-links{gap:15px;margin-left:auto}.nav-links a{font-size:11px}.nav-links a:last-child,.nav-edition{display:none}.intro{padding:44px 20px 28px}.intro h1{font-size:31px;letter-spacing:-1px}.intro p{font-size:13px}.section-label{font-size:10px}.workspace{margin:0 10px 55px;border-radius:9px}.workspace-toolbar{padding:0 14px}.toolbar-reference{display:none}.scenario-bar{display:block;padding:15px}.bar-label{display:block;margin-bottom:10px}.examples{gap:7px}.scenario{font-size:11px}.prompt,.reading{padding:23px 17px}.fields{grid-template-columns:1fr}.answer-details{grid-template-columns:1fr;gap:9px}.answer-main h3{font-size:21px}.composer-actions{align-items:stretch}.composer-right{width:100%;justify-content:flex-end}.toolbar-right{gap:8px}.local-state{font-size:10px}.sources{grid-template-columns:1fr}.sources,.evidence-heading,.evidence-bottom{padding-left:17px;padding-right:17px}.sources-top{margin:0 17px}.workspace-footer{flex-direction:column;align-items:start;padding:13px 17px}.approach{display:block;margin:0 20px 55px}.approach h2{font-size:22px;margin-bottom:21px}.site-footer{padding:22px 20px 34px;display:grid;gap:7px}}
+@media(max-width:370px){.toolbar-subtitle,.toolbar-sep{display:none}.nav-links{gap:11px}.scenario{padding-inline:10px}.composer-right{gap:2px}.quiet-button{padding:0 7px}.primary-button{padding:0 11px}}
+@media(prefers-reduced-motion:reduce){*,*::before,*::after{scroll-behavior:auto!important;transition-duration:0.01ms!important;animation-duration:0.01ms!important}}
+
+</style>
+</head>
+<body>
+<a class="skip-link" href="#workspace">Aller à l'analyse</a>
+<header class="site-nav" id="top">
+ <div class="nav-inner">
+  <a class="brand" href="#top" aria-label="ClausePilot, accueil"><span class="brand-icon" aria-hidden="true"><svg viewBox="0 0 26 26" width="23" height="23" fill="none"><rect x="2.5" y="4" width="15" height="15" rx="2.5" fill="currentColor"/><rect x="10" y="11" width="13.5" height="13.5" rx="2.5" stroke="#F1F1F2" stroke-width="2"/></svg></span><span>clausepilot<span class="brand-dot">.</span></span></a>
+  <nav class="nav-links" aria-label="Navigation principale"><a href="#workspace" aria-current="page">Démonstration</a><a href="#approach">Méthode</a><a href="https://github.com/sofianebelaribi/clausepilot-foyer-demo" target="_blank" rel="noopener noreferrer">Code source ↗</a></nav>
+  <span class="nav-edition"><span class="nav-live" aria-hidden="true"></span> Démo indépendante · 2026</span>
+ </div>
+</header>
+<main>
+ <section class="intro" aria-labelledby="page-title">
+  <div class="section-label"><span class="section-accent" aria-hidden="true">✦</span> EXERCICE AI ENGINEERING · GROUPE FOYER</div>
+  <h1 id="page-title">Analyse de sinistre<span class="punctuation">.</span></h1>
+  <p>Une lecture traçable des conditions générales. Pas de décision sans faits suffisants, ni sans clauses vérifiables.</p>
+ </section>
+ <div id="workspace" class="workspace" tabindex="-1">
+  <div class="workspace-toolbar"><div class="workspace-brand"><span class="workspace-symbol" aria-hidden="true">✦</span><span>Revue contractuelle</span><span class="toolbar-sep" aria-hidden="true">/</span><span class="toolbar-subtitle">Dossier fictif</span></div><div class="toolbar-right"><span class="local-state"><span class="local-dot" aria-hidden="true"></span> Traitement local</span><span class="toolbar-reference">HOME / LU / 09.2024</span></div></div>
+  <div class="scenario-bar"><span class="bar-label">Choisir un cas</span><nav id="scenarioButtons" class="examples" aria-label="Scénarios de sinistre"></nav></div>
+  <div class="workbench">
+   <div class="case-content">
+    <section class="prompt" aria-labelledby="prompt-title">
+     <div class="section-heading"><div><span class="panel-index">01 <span aria-hidden="true">/</span> Déclaration</span><h2 id="prompt-title">Les faits du dossier</h2></div><span class="info-tag">Données fictives</span></div>
+     <form id="caseForm" novalidate>
+      <div class="composer"><label for="description" class="composer-label">Que s'est-il passé ?</label><textarea id="description" name="description" rows="4" maxlength="3000" placeholder="Décrivez le bien, le lieu et les circonstances…" required aria-describedby="descriptionHelp descriptionError"></textarea><div id="descriptionError" class="form-error" role="alert"></div><div class="composer-actions"><span id="descriptionHelp" class="composer-help">Aucune donnée transmise à un serveur.</span><div class="composer-right"><button id="resetButton" type="button" class="quiet-button">Réinitialiser</button><button type="submit" class="primary-button">Actualiser l'analyse <span aria-hidden="true">↗</span></button></div></div></div>
+      <details id="refinements" class="refinements"><summary><span class="summary-title">Garanties et circonstances</span><span class="summary-hint">Renseigner les inconnues <span class="chevron" aria-hidden="true">⌄</span></span></summary><div class="refinements-inner"><p>Les réponses sont déclaratives. Un « Oui » ne prouve pas qu'une garantie figure réellement au contrat.</p><div id="caseFields" class="fields"></div></div></details>
+     </form>
+    </section>
+    <section class="reading" aria-labelledby="reading-title">
+     <div class="section-heading analysis-heading"><div><span class="panel-index">02 <span aria-hidden="true">/</span> Orientation</span><h2 id="reading-title">Résultat de la lecture</h2><p id="readingSub">Moteur à règles explicites · Validation humaine requise</p></div><span id="runState" class="run-status">À jour</span></div>
+     <div id="staleBanner" class="stale" hidden>Les faits ont changé. Actualisez l'analyse pour consulter un résultat à jour.</div>
+     <div class="answer" id="answer" aria-live="polite" aria-atomic="false">
+      <div class="answer-heading"><span class="answer-kicker">Orientation provisoire</span><span id="ruleIdentifier" class="rule-identifier"></span></div>
+      <div class="answer-main"><div class="answer-status"><span class="status-dot" aria-hidden="true"></span><span id="answerStatus">À approfondir</span></div><h3 id="answerTitle"></h3><p id="answerSummary"></p><div id="citationChips" class="citations" aria-label="Citations de l'analyse"></div></div>
+      <div class="answer-details"><section aria-labelledby="facts-title"><div class="detail-heading"><h4 id="facts-title">Éléments relevés</h4><span id="factsCount">0</span></div><ul id="factsList" class="facts-list"></ul></section><section aria-labelledby="gaps-title"><div class="detail-heading"><h4 id="gaps-title">Informations manquantes</h4><span id="questionsCount">0</span></div><ul id="questionsList" class="questions-list"></ul></section></div>
+      <div class="caution"><span aria-hidden="true">ⓘ</span><p>Le contrat individuel et ses éventuels avenants ne sont pas fournis. <strong>Ce résultat ne constitue pas une décision d'indemnisation.</strong></p></div>
+      <div class="answer-actions"><div class="action-buttons"><button id="copyButton" type="button" class="action-button">Copier le résumé</button><button id="exportButton" type="button" class="action-button">Exporter le dossier</button><button id="replayButton" type="button" class="action-button">Relancer ↻</button></div><span id="actionNotice" class="action-notice" role="status" aria-live="polite"></span></div>
+     </div>
+     <section class="followups" aria-labelledby="followups-title"><div class="followups-label"><h3 id="followups-title">Tester une autre hypothèse</h3><span>Modifie les faits déclarés, pas le contrat</span></div><div id="followupActions" class="followup-actions"></div></section>
+    </section>
+   </div>
+   <aside class="evidence-panel" id="sources" aria-labelledby="sources-title">
+    <div class="evidence-heading"><span class="panel-index">03 <span aria-hidden="true">/</span> Preuves</span><h2 id="sources-title">Clauses à vérifier</h2><p>Références issues de conditions générales publiques, et non d'un contrat individuel.</p></div>
+    <div class="sources-top"><span id="sourcesCount">Sources consultables</span><a id="contractUrl" href="https://www.baloise.lu/" target="_blank" rel="noopener noreferrer">PDF original ↗</a></div>
+    <div class="sources-viewport"><div id="evidenceList" class="sources" aria-label="Références du contrat"></div></div>
+    <div class="evidence-bottom"><span class="evidence-bottom-title">Limite du corpus</span><p>Neuf références paraphrasées, indexées manuellement. Ouvrez le PDF source pour confirmer chaque formulation et son contexte.</p></div>
+   </aside>
+  </div>
+  <div class="workspace-footer"><span>ClausePilot / prototype déterministe sans IA générative</span><span>4 cas de test · 1 contrat public · pas de données client</span></div>
+ </div>
+ <section id="approach" class="approach" aria-labelledby="approach-title"><div><span class="approach-eyebrow">Méthode et limites</span><h2 id="approach-title">Un système explicable, sans prétendre tout savoir.</h2></div><div class="approach-content"><p>L'interface fonctionne avec des règles explicites et une sélection de clauses manuellement identifiées. Un <strong>pipeline Python distinct</strong> démontre l'indexation de PDF et la recherche BM25 limitée au bon contrat. Ces deux parties ne sont pas encore raccordées.</p><p>Pour passer à plusieurs centaines de contrats : gestion stricte des versions, segmentation documentaire, retrieval évalué, citations en contexte, tests d'abstention et revue humaine. Aucun score de confiance fictif.</p><a href="https://github.com/sofianebelaribi/clausepilot-foyer-demo/blob/main/docs/TECHNICAL_NOTE.md" target="_blank" rel="noopener noreferrer">Consulter l'architecture et les tests ↗</a></div></section>
+</main>
+<footer class="site-footer"><span>ClausePilot © 2026 · Démonstration indépendante</span><span>Ni affilié à Foyer, ni à Baloise · <span id="contractName">Baloise HOME</span></span></footer>
+<div id="sourcePopover" class="source-popover" role="dialog" aria-modal="false" aria-label="Aperçu de la référence" hidden></div>
+<script>
+/**
+ * Manually verified clause index. References are paraphrases, not the full licensed PDF.
+ * The public Baloise policy is for recruitment demonstration, not a customer contract.
+ */
+const POLICY = Object.freeze({
+  id: 'CG-HOME(2)-LUFR-09-24',
+  carrier: 'Baloise Assurances Luxembourg S.A.',
+  product: 'HOME — Conditions générales',
+  edition: '09/2024',
+  publicPdf: 'https://www.baloise.lu/dam/baloise-lu/1890/particulier/documents/CG-CS/CG-HOME-2--LUFR-09-24.pdf0',
+  actualParticularsProvided: false,
+});
+
+const url = (page) => `${POLICY.publicPdf}#page=${page}`;
+
+const CLAUSES = Object.freeze({
+  particular: {
+    id: 'CP-00', page: 15, heading: 'Garanties optionnelles', type: 'condition',
+    note: 'Une option ne s’applique que si elle figure dans les conditions particulières du contrat.',
+    href: url(15),
+  },
+  theft: {
+    id: 'VOL-01', page: 15, heading: 'Vol / vandalisme', type: 'coverage',
+    note: 'Le volet vol cite plusieurs modes opératoires et les biens mobiliers dans le bâtiment assuré.',
+    href: url(15),
+  },
+  precautions: {
+    id: 'VOL-02', page: 16, heading: 'Prévention / protection', type: 'limitation',
+    note: 'Les accès doivent respecter des dispositifs de fermeture, avec des obligations de sécurité en cas d’absence.',
+    href: url(16),
+  },
+  mobility: {
+    id: 'MOB-01', page: 19, heading: 'Pack équipements de mobilité durable', type: 'coverage',
+    note: 'Le pack inclut les vélos et vélos à assistance électrique, selon les limites et options souscrites.',
+    href: url(19),
+  },
+  mobilityLock: {
+    id: 'MOB-02', page: 19, heading: 'Condition pour la garantie vol', type: 'condition',
+    note: 'Dans un espace public, le vélo doit être relié par son cadre à un point fixe avec un antivol approuvé.',
+    href: url(19),
+  },
+  garden: {
+    id: 'JAR-01', page: 20, heading: 'Pack jardin / piscine', type: 'coverage',
+    note: 'Le mobilier de jardin fait partie des biens visés par ce pack, sous réserve d’un événement garanti.',
+    href: url(20),
+  },
+  heat: {
+    id: 'INC-01', page: 12, heading: 'Incendie et événements assimilés', type: 'coverage',
+    note: 'La garantie de base mentionne les dommages ménagers dus à une action subite de la chaleur ou au contact du feu.',
+    href: url(12),
+  },
+  heatDefinition: {
+    id: 'DEF-01', page: 6, heading: 'Dommages ménagers — définition', type: 'definition',
+    note: 'Cette définition décrit notamment certains dommages aux objets d’ameublement dus à un excès de chaleur sans embrasement.',
+    href: url(6),
+  },
+  location: {
+    id: 'BIEN-01', page: 11, heading: 'Biens mobiliers', type: 'condition',
+    note: 'La couverture ordinaire du contenu vise les biens situés dans les locaux assurés, sauf extension prévue.',
+    href: url(11),
+  },
+});
+
+
+
+const clean = text => (text || '').normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase();
+const unique = list => [...new Set(list)];
+
+function classify(description) {
+  const d = clean(description);
+  if ((/(velo|bicycl|bike)/.test(d)) && /(vol|vole|derobe|disparu)/.test(d)) return 'bike';
+  if ((/(bougie|cire|chaleur|fondu|fond|brul)/.test(d)) && /(table|mobilier|jardin|terrasse)/.test(d)) return 'garden';
+  if (/(vol|vole|cambriol|derobe)/.test(d) && /(porte|effraction|serrure|logement|appartement|maison)/.test(d)) return 'theft';
+  return 'other';
+}
+
+function result({ kind, status, title, summary, facts, gaps, clauses, checks, decisionRule }) {
+  return { kind, status, title, summary, facts: unique(facts), gaps: unique(gaps),
+    clauses: unique(clauses).map(k => CLAUSES[k]), checks,
+    decisionRule, autoDecision: false, policyEdition: '09/2024' };
+}
+
+/** Pure triage function. Input contracts use tri-state: yes / no / unknown. */
+function assess({ description, theftOption = 'unknown', mobilityPack = 'unknown', gardenPack = 'unknown', fireCover = 'unknown', lockedRoom = 'unknown', approvedLock = 'unknown', publicSpace = 'unknown', eventSudden = 'unknown' }) {
+  const kind = classify(description);
+  if (kind === 'bike') {
+    const facts = ['Vol d’un vélo décrit par le déclarant'];
+    const gaps = [];
+    const checks = [
+      ['Garantie vol souscrite', theftOption], ['Pack mobilité souscrit', mobilityPack],
+      ['Local fermé', lockedRoom], ['Espace public', publicSpace], ['Antivol approuvé + point fixe', approvedLock],
+    ];
+    const clauses = ['particular', 'theft', 'mobility', 'mobilityLock', 'precautions'];
+    if (theftOption === 'no' && mobilityPack === 'no') {
+      return result({kind, status:'negative', title:'Garanties pertinentes non souscrites',
+        summary:'Les options pertinentes sont déclarées absentes. Ce résultat reste une vérification de périmètre, pas une décision d’indemnisation.',
+        facts, gaps:['Vérifier l’existence éventuelle d’une garantie distincte ou d’un avenant.'], clauses, checks, decisionRule:'OPTION_SCOPE'});
+    }
+    if (mobilityPack === 'yes' && publicSpace === 'yes' && approvedLock === 'no') {
+      return result({kind, status:'negative', title:'Condition de sécurité non satisfaite',
+        summary:'Pour le pack mobilité, la protection demandée dans un espace public n’est pas remplie d’après les éléments déclarés.',
+        facts, gaps:['Confirmer que le lieu répond juridiquement à la notion d’espace public.','Vérifier les conditions particulières et les faits.'], clauses, checks, decisionRule:'PUBLIC_BIKE_LOCK'});
+    }
+    if (theftOption === 'unknown' && mobilityPack === 'unknown') gaps.push('Quelles garanties figurent aux conditions particulières ?');
+    if (lockedRoom === 'no') facts.push('Local signalé comme non fermé à clé');
+    else if (lockedRoom === 'unknown') gaps.push('Le local était-il effectivement fermé à clé ?');
+    if (publicSpace === 'unknown') gaps.push('Le local collectif est-il assimilé à un espace public pour ce contrat ?');
+    if (approvedLock === 'unknown') gaps.push('Le cadre du vélo était-il attaché à un point fixe avec un antivol approuvé ?');
+    if (mobilityPack === 'unknown') gaps.push('Le pack mobilité durable est-il souscrit ?');
+    if (theftOption === 'unknown') gaps.push('La garantie vol est-elle souscrite ?');
+    if (publicSpace === 'yes' && approvedLock === 'no') facts.push('L’antivol exigé en espace public ne serait pas respecté');
+    const favorable = mobilityPack === 'yes' && publicSpace === 'yes' && approvedLock === 'yes';
+    return result({kind, status: favorable ? 'possible':'review',
+      title: favorable ? 'Éligibilité envisageable, à vérifier' : 'Impossible de conclure en sécurité',
+      summary: favorable ? 'La condition d’antivol du pack mobilité paraît satisfaite. La souscription, le statut du lieu et les autres clauses restent à valider.'
+       : 'Un local commun non fermé ne suffit pas, à lui seul, à démontrer une exclusion universelle : la qualification du lieu, les options et les protections sont déterminantes.',
+      facts, gaps: favorable ? ['Confirmer les conditions particulières et les circonstances exactes du vol.']:gaps,
+      clauses, checks, decisionRule: favorable?'MOBILITY_ELIGIBLE_REVIEW':'INSUFFICIENT_CONTRACT_CONTEXT'});
+  }
+  if (kind === 'garden') {
+    const facts = ['Dégradation d’un mobilier de jardin liée à une bougie / chaleur'];
+    const checks = [['Pack jardin souscrit',gardenPack], ['Garantie incendie/assimilés',fireCover], ['Événement subit',eventSudden]];
+    const clauses = ['particular','garden','heat','heatDefinition'];
+    if (gardenPack === 'no') return result({kind,status:'negative',title:'Pack jardin déclaré absent',
+      summary:'Le mobilier de jardin figure dans un pack optionnel déclaré non souscrit ; vérifier s’il existe une autre garantie applicable.',
+      facts,gaps:['Vérifier les conditions particulières, avenants ou autres garanties.'],clauses,checks,decisionRule:'GARDEN_PACK_SCOPE'});
+    const gaps = [];
+    if (gardenPack !== 'yes') gaps.push('Le pack jardin / piscine a-t-il été souscrit ?');
+    if (fireCover !== 'yes') gaps.push('La garantie incendie et événements assimilés figure-t-elle au contrat ?');
+    if (eventSudden !== 'yes') gaps.push('La détérioration était-elle un événement subit ou une évolution progressive ?');
+    gaps.push('L’analyse des exclusions, franchises et conditions particulières est nécessaire.');
+    return result({kind,status:'review',title:'Qualification du dommage à instruire',
+      summary:'La chaleur et le mobilier extérieur sont bien traités dans le document, mais la fonte progressive de la bougie ne prouve pas une action subite de la chaleur.',
+      facts,gaps,clauses,checks,decisionRule:'HEAT_CAUSALITY_UNRESOLVED'});
+  }
+  if (kind === 'theft') {
+    const facts = ['Vol / effraction dans un lieu d’habitation déclaré'];
+    const checks = [['Garantie vol souscrite',theftOption]];
+    const clauses = ['particular','theft','precautions','location'];
+    if (theftOption === 'no') return result({kind,status:'negative',title:'Garantie vol non souscrite',
+      summary:'La garantie vol est facultative dans le document étudié : l’absence déclarée doit être confirmée sur le contrat individuel.',
+      facts,gaps:['Vérifier les conditions particulières et avenants.'],clauses,checks,decisionRule:'OPTION_SCOPE'});
+    if (theftOption === 'yes') return result({kind,status:'possible',title:'Garantie potentiellement mobilisable',
+      summary:'Le vol avec effraction correspond à un mode opératoire mentionné. Il faut encore établir les conditions du dossier avant toute décision.',
+      facts,gaps:['Confirmer la présence d’effraction documentée.', 'Vérifier le périmètre assuré et les mesures de protection.'],clauses,checks,decisionRule:'THEFT_ELIGIBLE_REVIEW'});
+    return result({kind,status:'review',title:'Souscription non vérifiée',
+      summary:'Les conditions générales décrivent le vol, mais l’existence de la garantie au contrat individuel est inconnue.',
+      facts,gaps:['Vérifier la souscription de la garantie vol.','Obtenir le procès-verbal ou les justificatifs d’effraction.'],clauses,checks,decisionRule:'OPTION_UNKNOWN'});
+  }
+  return result({kind,status:'review',title:'Aucune clause suffisamment pertinente',
+    summary:'Le moteur ne trouve pas de correspondance fiable dans son périmètre : il refuse de produire un verdict sans preuve.',
+    facts:[],gaps:['Décrire le dommage, le bien concerné et les circonstances.','Ajouter un corpus adapté avant d’évaluer ce sinistre.'],
+    clauses:['particular'],checks:[],decisionRule:'OUT_OF_SCOPE'});
+}
+
+
+
+
+/** A review interface over a transparent, deterministic rules engine — not an LLM. */
+const CASES = Object.freeze({
+  bicycle: {label:'Vol de vélo',question:'On m’a volé mon vélo dans le local commun de mon immeuble. Le local n’était pas fermé à clé.',defaults:{lockedRoom:'no'}},
+  candle: {label:'Bougie & jardin',question:'J’ai laissé une bougie sur la table de mon jardin pendant mes vacances. Avec la chaleur, la bougie a fondu et abîmé la table.',defaults:{}},
+  outside: {label:'Vélo à la gare',question:'Mon vélo a été volé dans un espace public, alors qu’il était stationné devant une gare.',defaults:{publicSpace:'yes'}},
+  home: {label:'Vol avec effraction',question:'Après une effraction de la porte de mon appartement, des objets ont été volés dans mon logement.',defaults:{}}
+});
+const FIELDS=Object.freeze([
+  {id:'theftOption',label:'Garantie vol souscrite',kinds:['bike','theft']},
+  {id:'mobilityPack',label:'Pack mobilité durable souscrit',kinds:['bike']},
+  {id:'lockedRoom',label:'Local fermé à clé',kinds:['bike']},
+  {id:'publicSpace',label:'Lieu reconnu comme espace public',kinds:['bike']},
+  {id:'approvedLock',label:'Antivol approuvé et point fixe',kinds:['bike']},
+  {id:'gardenPack',label:'Pack jardin / piscine souscrit',kinds:['garden']},
+  {id:'fireCover',label:'Garantie incendie et assimilés',kinds:['garden']},
+  {id:'eventSudden',label:'Événement subit',kinds:['garden']}
+]);
+const STATUS={review:'À approfondir',possible:'Garantie envisageable',negative:'Condition à vérifier'};
+const FOLLOWUPS={
+  bicycle:[{label:'Et si le local était fermé ?',changes:{lockedRoom:'yes'}},{label:'Et si le pack mobilité était souscrit ?',changes:{mobilityPack:'yes'}},{label:'Lire les conditions de vol',source:'theft'}],
+  candle:[{label:'Et si le pack jardin était souscrit ?',changes:{gardenPack:'yes'}},{label:'Et si le dommage était soudain ?',changes:{eventSudden:'yes'}},{label:'Lire les conditions incendie',source:'heat'}],
+  outside:[{label:'Antivol conforme et pack souscrit',changes:{approvedLock:'yes',mobilityPack:'yes'}},{label:'Antivol absent et pack souscrit',changes:{approvedLock:'no',mobilityPack:'yes'}},{label:'Lire la clause sur l’antivol',source:'mobilityLock'}],
+  home:[{label:'Garantie vol souscrite',changes:{theftOption:'yes'}},{label:'Garantie vol absente',changes:{theftOption:'no'}},{label:'Lire la clause vol',source:'theft'}]
+};
+const $=s=>document.querySelector(s);
+const safe=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const form=$('#caseForm'),description=$('#description'),nav=$('#scenarioButtons'),fields=$('#caseFields'),popover=$('#sourcePopover');
+let activeCase='bicycle',visibleKind=null,lastAnalysis=null,lastInput=null,dirty=false,openChip=null,highlighted=null;
+const getInput=()=>{const input={description:description.value.trim()};form.querySelectorAll('select').forEach(node=>input[node.name]=node.value);return input;};
+function drawFields(defaults={},previous={}){
+ const kind=classify(description.value);visibleKind=kind;
+ const applicable=FIELDS.filter(f=>f.kinds.includes(kind));
+ fields.innerHTML=applicable.length?applicable.map(f=>`<label class="field" for="f-${f.id}"><span>${safe(f.label)}</span><select id="f-${f.id}" name="${f.id}"><option value="unknown">Non renseigné</option><option value="yes">Oui (déclaré)</option><option value="no">Non (déclaré)</option></select></label>`).join(''):'<p class="form-empty">Aucune condition indexée pour ce type de sinistre. Le moteur s’abstiendra.</p>';
+ applicable.forEach(f=>{const v=defaults[f.id]??previous[f.id]??'unknown';form.elements.namedItem(f.id).value=['yes','no','unknown'].includes(v)?v:'unknown';});
+}
+function makeNav(){nav.innerHTML=Object.entries(CASES).map(([key,c])=>`<button type="button" class="scenario" data-case="${key}" aria-pressed="false"><span class="scenario-dot" aria-hidden="true"></span>${safe(c.label)}</button>`).join('');}
+function updateNav(){nav.querySelectorAll('[data-case]').forEach(b=>b.setAttribute('aria-pressed',String(b.dataset.case===activeCase&&description.value===CASES[activeCase].question)));}
+function selectCase(key){if(!Object.hasOwn(CASES,key))return;activeCase=key;description.value=CASES[key].question;description.setAttribute('aria-invalid','false');$('#descriptionError').textContent='';drawFields(CASES[key].defaults);updateNav();analyze();}
+function setDirty(){if(!lastAnalysis)return;dirty=true;$('#staleBanner').hidden=false;$('#runState').textContent='Réponse à actualiser';$('#runState').classList.add('is-stale');['#exportButton','#copyButton'].forEach(id=>$(id).disabled=true);closePopover();}
+function setClean(){dirty=false;$('#staleBanner').hidden=true;$('#runState').textContent='Analyse à jour';$('#runState').classList.remove('is-stale');['#exportButton','#copyButton'].forEach(id=>$(id).disabled=false);}
+function listHtml(items){return items.length?items.map(x=>`<li>${safe(x)}</li>`).join(''):'<li>Aucun élément dans ce dossier.</li>';}
+function highlight(index){if(highlighted!==null){document.querySelectorAll(`[data-source="${highlighted}"]`).forEach(x=>x.classList.remove('is-highlighted'));}highlighted=index;if(index!==null){document.querySelectorAll(`[data-source="${index}"]`).forEach(x=>x.classList.add('is-highlighted'));const card=$(`#source-card-${index}`);if(card){const scroller=card.parentElement;const item=card.getBoundingClientRect();const view=scroller.getBoundingClientRect();const desired=item.left<view.left?item.left-view.left:item.right>view.right?item.right-view.right:0;if(desired!==0)scroller.scrollBy({left:desired,behavior:window.matchMedia('(prefers-reduced-motion: reduce)').matches?'instant':'smooth'});}}}
+function closePopover(){popover.hidden=true;if(openChip){openChip.setAttribute('aria-expanded','false');openChip=null;}highlight(null);}
+function showSource(index,button){const clause=lastAnalysis?.clauses?.[index];if(!clause)return;if(openChip===button){closePopover();return;}closePopover();const nr=String(index+1).padStart(2,'0');popover.innerHTML=`<div class="popover-head"><span class="popover-origin">SOURCE ${nr} · PAGE ${clause.page}</span><button type="button" class="popover-close" aria-label="Fermer l'aperçu">×</button></div><h4>${safe(clause.heading)}</h4><p>${safe(clause.note)}</p><a href="${safe(clause.href)}" target="_blank" rel="noopener noreferrer">Ouvrir la page du contrat ↗</a>`;popover.hidden=false;openChip=button;button.setAttribute('aria-expanded','true');const rect=button.getBoundingClientRect();const targetWidth=Math.min(340,window.innerWidth-24);const left=Math.max(12,Math.min(window.innerWidth-targetWidth-12,rect.left));const top=rect.bottom+12+206>window.innerHeight?Math.max(12,rect.top-211):rect.bottom+12;popover.style.left=`${left}px`;popover.style.top=`${top}px`;popover.querySelector('.popover-close').addEventListener('click',()=>{closePopover();button.focus();});highlight(index);}
+function buildFollowups(){const followups=FOLLOWUPS[activeCase]||[];$('#followupActions').innerHTML=followups.map((item,i)=>`<button type="button" class="followup" data-followup="${i}">${safe(item.label)} <span aria-hidden="true">↗</span></button>`).join('');}
+function render(r){closePopover();$('#answerStatus').textContent=STATUS[r.status];$('#ruleIdentifier').textContent=r.decisionRule;const status=$('.answer-status');status.classList.toggle('positive',r.status==='possible');status.classList.toggle('negative',r.status==='negative');$('#answerTitle').textContent=r.title;$('#answerSummary').textContent=r.summary;$('#factsList').innerHTML=listHtml(r.facts);$('#questionsList').innerHTML=listHtml(r.gaps);$('#factsCount').textContent=String(r.facts.length);$('#questionsCount').textContent=String(r.gaps.length);$('#sourcesCount').textContent=`${r.clauses.length} références consultables`;
+ $('#evidenceList').innerHTML=r.clauses.map((c,i)=>`<a class="source-card" data-source="${i}" id="source-card-${i}" href="${safe(c.href)}" target="_blank" rel="noopener noreferrer" aria-label="Source ${i+1}, ${safe(c.heading)}, page ${c.page}"><div class="source-card-head"><span class="source-card-number">${i+1}</span><span class="source-card-origin">Baloise HOME</span></div><strong class="source-card-title">${safe(c.heading)}</strong><span class="source-card-note">${safe(c.note)}</span><span class="source-card-footer">${safe(c.id)} · page ${c.page} <span>↗</span></span></a>`).join('');
+ $('#citationChips').innerHTML=`<span class="cite-label">Clauses à consulter</span>`+r.clauses.map((c,i)=>`<button class="cite-chip" data-source="${i}" type="button" aria-haspopup="dialog" aria-expanded="false" aria-label="Aperçu de ${safe(c.heading)}, page ${c.page}"><sup>${i+1}</sup>${safe(c.id)}</button>`).join('');buildFollowups();const a=$('#answer');a.style.animation='none';void a.offsetWidth;a.style.animation='';$('#actionNotice').textContent='';}
+function analyze(){const input=getInput();if(!input.description){description.setAttribute('aria-invalid','true');$('#descriptionError').textContent='Décrivez le sinistre avant de lancer l’analyse.';description.focus();return;}description.setAttribute('aria-invalid','false');$('#descriptionError').textContent='';lastInput=structuredClone(input);lastAnalysis=assess(input);render(lastAnalysis);setClean();}
+function reportText(input,r){const yn={yes:'Oui (déclaré)',no:'Non (déclaré)',unknown:'Non renseigné'};return ['CLAUSEPILOT — ÉTUDE DE CAS / DÉMONSTRATION',`Date : ${new Date().toLocaleString('fr-FR')}`,'',`Contrat : ${POLICY.carrier}, ${POLICY.id}`,POLICY.publicPdf,'','DÉCLARATION',input.description,'','INFORMATIONS DÉCLARÉES',...FIELDS.filter(f=>f.kinds.includes(r.kind)).map(f=>`${f.label} : ${yn[input[f.id]||'unknown']}`),'','ANALYSE',STATUS[r.status],r.title,r.summary,`Règle : ${r.decisionRule}`,'','FAITS',...r.facts.map(x=>`- ${x}`),'','POINTS À VÉRIFIER',...r.gaps.map(x=>`- ${x}`),'','SOURCES',...r.clauses.map((c,i)=>`${i+1}. ${c.id} — ${c.heading}, p. ${c.page} : ${c.href}`),'','LIMITES','Pas de modèle d’IA : classification par mots-clés et règles explicites. Aucune connaissance du contrat individuel. Vérification humaine indispensable.'].join('\n');}
+function exportReport(){if(dirty||!lastAnalysis||!lastInput)return;const blob=new Blob(['\ufeff'+reportText(lastInput,lastAnalysis)],{type:'text/plain;charset=utf-8'});const url=URL.createObjectURL(blob);const anchor=document.createElement('a');anchor.href=url;anchor.download='clausepilot-synthese-'+new Date().toISOString().slice(0,10)+'.txt';anchor.hidden=true;document.body.append(anchor);anchor.click();anchor.remove();setTimeout(()=>URL.revokeObjectURL(url),900);$('#actionNotice').textContent='Fichier prêt.';}
+async function copyReport(){if(dirty||!lastAnalysis||!lastInput)return;const copy=reportText(lastInput,lastAnalysis);try{await navigator.clipboard.writeText(copy);$('#actionNotice').textContent='Réponse copiée.';}catch{const temp=document.createElement('textarea');temp.value=copy;temp.style.position='fixed';temp.style.opacity='0';document.body.append(temp);temp.select();const ok=document.execCommand('copy');temp.remove();$('#actionNotice').textContent=ok?'Réponse copiée.':'Copie indisponible sur ce navigateur.';}}
+makeNav();$('#contractUrl').href=POLICY.publicPdf;$('#contractName').textContent='Baloise HOME, 09/2024';nav.addEventListener('click',e=>{const b=e.target.closest('button[data-case]');if(b)selectCase(b.dataset.case);});
+form.addEventListener('submit',e=>{e.preventDefault();analyze();});form.addEventListener('change',setDirty);description.addEventListener('input',()=>{const kind=classify(description.value);if(kind!==visibleKind){drawFields({},getInput());}updateNav();description.setAttribute('aria-invalid','false');$('#descriptionError').textContent='';setDirty();});
+$('#resetButton').addEventListener('click',()=>selectCase(activeCase));$('#replayButton').addEventListener('click',analyze);$('#exportButton').addEventListener('click',exportReport);$('#copyButton').addEventListener('click',copyReport);
+$('#citationChips').addEventListener('click',e=>{const b=e.target.closest('.cite-chip');if(b)showSource(Number(b.dataset.source),b);});$('#citationChips').addEventListener('pointerover',e=>{const b=e.target.closest('.cite-chip');if(b&&!openChip)highlight(Number(b.dataset.source));});$('#citationChips').addEventListener('pointerout',e=>{if(!openChip&&e.target.closest('.cite-chip'))highlight(null);});$('#citationChips').addEventListener('focusin',e=>{const b=e.target.closest('.cite-chip');if(b&&!openChip)highlight(Number(b.dataset.source));});$('#citationChips').addEventListener('focusout',()=>{if(!openChip)highlight(null);});
+$('#followupActions').addEventListener('click',e=>{const b=e.target.closest('[data-followup]');if(!b)return;const followup=FOLLOWUPS[activeCase]?.[Number(b.dataset.followup)];if(!followup)return;if(followup.source){const index=lastAnalysis?.clauses?.findIndex(c=>c.href.includes(`#page=`)&&c.id===({theft:'VOL-01',heat:'INC-01',mobilityLock:'MOB-02'}[followup.source]));if(index>=0)window.open(lastAnalysis.clauses[index].href,'_blank','noopener,noreferrer');return;}$('#refinements').open=true;for(const [id,v] of Object.entries(followup.changes||{})){const field=form.elements.namedItem(id);if(field)field.value=v;}setDirty();analyze();document.querySelector('.answer')?.scrollIntoView({behavior:window.matchMedia('(prefers-reduced-motion: reduce)').matches?'instant':'smooth',block:'start'});});
+document.addEventListener('pointerdown',e=>{if(openChip&&!popover.contains(e.target)&&!openChip.contains(e.target))closePopover();});document.addEventListener('keydown',e=>{if(e.key==='Escape'&&openChip){const button=openChip;closePopover();button.focus();}});
+selectCase('bicycle');
+
+</script>
+</body>
+</html>
